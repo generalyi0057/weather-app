@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 const WeatherBoard = () => {
   return (
     <>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="primary" variant="dark">
           <Container>
             <Navbar.Brand>Weather API</Navbar.Brand>
             {/*<Form className="d-flex">

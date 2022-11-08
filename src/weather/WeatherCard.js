@@ -3,42 +3,67 @@ import { useState, useEffect } from 'react';
 import { getWeather, getMyWeather, weathercodeList } from "./api";
 
 import Container from 'react-bootstrap/Container';
-import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 import Card from 'react-bootstrap/Card';
 import Nav from 'react-bootstrap/Nav';
 
 import "./WeatherCard.sass";
 
 const WeatherCard = () => {
+  const [weatherInfo, setWeatherInfo] = useState({});
   const [city, setCity] = useState("");
   const [temperature, setTemperature] = useState("");
   const [temperatureUnit, setTemperatureUnit] = useState("");
   const [weathercode, setWeathercode] = useState("");
 
+  const switchTempUnit = () => {
+    setWeatherInfo({
+      ...weatherInfo,
+      temperatureUnit: weatherInfo.temperatureUnit === "°C" ? "°F" : "°C"
+    });
+  }
+
   useEffect(() => {
     const myWeather = getMyWeather();
     myWeather.then(res => {
       console.log(res);
-      setCity(res.location.city);
-      setTemperature(res.weather.current_weather.temperature);
-      setTemperatureUnit("C");
-      setWeathercode(res.weather.current_weather.weathercode)
+      setWeatherInfo({
+        city: res.location.city,
+        temperature: res.weather.current_weather.temperature,
+        temperatureUnit: "°C",
+        weathercode: res.weather.current_weather.weathercode.toString()
+      });
     });
-
-  });
+  }, []);
 
   return (
-    <Container>
-      <Card className="weather-card">
-        <Card.Body>
-          <Card.Title>{city}</Card.Title>
-          <Card.Text>
-            {temperature}°{temperatureUnit}
-          </Card.Text>
-          <Card.Text>
-            {weathercodeList[weathercode]}
-          </Card.Text>
-        </Card.Body>
+    <Container className="text-center">
+      <Card className="weather-card" style={{ width: '18rem' }}>
+        { weatherInfo && weatherInfo.weathercode ?
+          <Card.Body>
+            <Card.Title>
+              {weatherInfo.city}
+            </Card.Title>
+            <i className={weathercodeList[weatherInfo.weathercode].icon}></i>
+
+            <Card.Text>
+              {weathercodeList[weatherInfo.weathercode].text}
+            </Card.Text>
+            <Card.Text onClick={switchTempUnit}>
+              {weatherInfo.temperatureUnit === "°C" ?
+                weatherInfo.temperature :
+                weatherInfo.temperature * 1.8 + 32
+              }
+              {weatherInfo.temperatureUnit}
+            </Card.Text>
+          </Card.Body>
+          :
+          <Card.Body>
+            <Spinner animation="border" variant="primary role='status'">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </Card.Body>
+        }
         {/*<Card.Header className="bg-white">
           <Nav variant="tabs" defaultActiveKey="#first">
             <Nav.Item>
