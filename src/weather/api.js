@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// TODO:: hourly weather & daily weather
 // const URL = "https://api.open-meteo.com/v1/forecast?latitude=29.76&longitude=-95.36&hourly=weathercode&hourly=temperature_2m&current_weather=true&timeformat=unixtime&timezone=CST";
 
 const WEATHER_URL = "https://api.open-meteo.com/v1/forecast";

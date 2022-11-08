@@ -26,11 +26,10 @@ const WeatherCard = () => {
   useEffect(() => {
     const myWeather = getMyWeather();
     myWeather.then(res => {
-      console.log(res);
       setWeatherInfo({
         city: res.location.city,
         temperature: res.weather.current_weather.temperature,
-        temperatureUnit: "°C",
+        temperatureUnit: weatherInfo.temperatureUnit !== "°F" ? "°C" : "°F",
         weathercode: res.weather.current_weather.weathercode.toString()
       });
     });
@@ -49,12 +48,12 @@ const WeatherCard = () => {
             <Card.Text>
               {weathercodeList[weatherInfo.weathercode].text}
             </Card.Text>
-            <Card.Text onClick={switchTempUnit}>
+            <Card.Text className="clickable" onClick={switchTempUnit}>
               {weatherInfo.temperatureUnit === "°C" ?
                 weatherInfo.temperature :
-                weatherInfo.temperature * 1.8 + 32
+                (weatherInfo.temperature * 1.8 + 32).toFixed(1)
               }
-              {weatherInfo.temperatureUnit}
+              {" " + weatherInfo.temperatureUnit}
             </Card.Text>
           </Card.Body>
           :
